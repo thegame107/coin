@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nettoyage de Pièce</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .products-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .products-panel h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            text-align: center;
+        }
+
+        .product-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .product-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-item.selected {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            transform: scale(1.05);
+        }
+
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .selected-product-display {
+            font-size: 1.5em;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: bold;
+            min-height: 40px;
+        }
+
+        .coin-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            cursor: none;
+        }
+
+        .coin {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 15px 50px rgba(0, 0, 0, 0.4),
+                inset 0 2px 5px rgba(255, 255, 255, 0.3),
+                inset 0 -2px 5px rgba(0, 0, 0, 0.3);
+            border: 3px solid #8b7355;
+        }
+
+        .coin-dirty {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(90, 74, 58, 0.9) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(60, 50, 40, 0.8) 0%, transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(40, 30, 20, 0.9) 0%, transparent 45%),
+                radial-gradient(circle at 20% 70%, rgba(70, 60, 50, 0.7) 0%, transparent 35%),
+                linear-gradient(135deg, #5a4a3a 0%, #4a3a2a 25%, #3a2a1a 50%, #2a1a0a 75%, #1a0a00 100%);
+            border-radius: 50%;
+            transition: opacity 0.1s;
+            box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.6);
+        }
+
+        .coin-clean {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 35% 35%, #fff9e6 0%, transparent 25%),
+                radial-gradient(circle at 65% 40%, #ffe680 0%, transparent 30%),
+                radial-gradient(circle at 50% 50%, #ffd700 0%, #ffed4e 40%, #ffc700 70%, #b8860b 100%);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                inset 0 3px 8px rgba(255, 255, 255, 0.6),
+                inset 0 -3px 8px rgba(184, 134, 11, 0.4);
+        }
+
+        .coin-symbol {
+            font-size: 4em;
+            color: #b8860b;
+            font-weight: bold;
+            text-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.3),
+                -1px -1px 2px rgba(255, 255, 255, 0.5);
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+        }
+
+        .coin-details {
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            border-radius: 50%;
+            border: 2px solid rgba(184, 134, 11, 0.4);
+            top: 5%;
+            left: 5%;
+            pointer-events: none;
+        }
+
+        .coin-details::before {
+            content: '★ ★ ★ ★ ★';
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            top: 15%;
+            font-size: 0.8em;
+            color: rgba(184, 134, 11, 0.6);
+            letter-spacing: 8px;
+        }
+
+        .coin-details::after {
+            content: '2025';
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            bottom: 15%;
+            font-size: 1em;
+            color: rgba(184, 134, 11, 0.7);
+            font-weight: bold;
+        }
+
+        .coin-texture {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(184, 134, 11, 0.1) 2px, rgba(184, 134, 11, 0.1) 3px);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .foam {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(220, 240, 255, 0.8) 40%, rgba(180, 220, 255, 0.4) 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: foam-fade 0.8s ease-out forwards;
+            box-shadow: 
+                0 0 10px rgba(255, 255, 255, 0.8),
+                inset 0 2px 5px rgba(255, 255, 255, 0.9);
+        }
+
+        @keyframes foam-fade {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.3) rotate(180deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(2.5) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            margin-top: 30px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .victory-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 40px 60px;
+            border-radius: 20px;
+            font-size: 2em;
+            font-weight: bold;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            animation: victory-pop 0.5s ease-out forwards;
+            text-align: center;
+        }
+
+        @keyframes victory-pop {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .ad-space {
+            background: #f5f5f5;
+            border: 2px dashed #ccc;
+            padding: 30px;
+            text-align: center;
+            color: #888;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .reset-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="products-panel">
+            <h2>🧼 Produits de Nettoyage</h2>
+            <div id="productsList"></div>
+        </div>
+
+        <div class="game-area">
+            <div class="selected-product-display" id="selectedProduct">Choisissez un produit pour commencer</div>
+            
+            <div class="coin-container" id="coinContainer">
+                <div class="coin">
+                    <div class="coin-clean">
+                        <div class="coin-symbol">€</div>
+                        <div class="coin-details"></div>
+                        <div class="coin-texture"></div>
+                    </div>
+                    <div class="coin-dirty" id="coinDirty"></div>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+
+            <button class="reset-btn" onclick="resetGame()">Recommencer</button>
+        </div>
+    </div>
+
+    <div class="ad-space">
+        📢 Espace publicitaire - Intégrez vos annonces ici (Google AdSense, etc.)
+    </div>
+
+    <script>
+        const products = [
+            "🍋 Citron", "🧴 Dentifrice", "🥤 Bicarbonate de soude", "🧂 Sel", "🍶 Vinaigre blanc",
+            "🧼 Savon de Marseille", "💧 Eau savonneuse", "🧽 Éponge magique", "🧴 Liquide vaisselle",
+            "🥛 Lait", "🍅 Ketchup", "🥫 Coca-Cola", "☕ Café", "🍵 Thé", "🧊 Glaçons",
+            "🧴 Shampoing", "🧴 Gel douche", "🧴 Savon liquide", "🧼 Savon noir", "🧴 Démaquillant",
+            "🧂 Gros sel", "🥄 Fécule de maïs", "🌾 Farine", "🍯 Miel", "🥚 Blanc d'œuf",
+            "🥔 Pomme de terre", "🥒 Concombre", "🍎 Vinaigre de cidre", "🫒 Huile d'olive",
+            "🌻 Huile de tournesol", "🧴 Alcool à 90°", "💊 Aspirine écrasée", "🧴 Eau oxygénée",
+            "🧪 Ammoniaque", "🧪 Acide citrique", "🧂 Cristaux de soude", "🧴 Savon de potasse",
+            "🧴 Pierre d'argile", "🏔️ Pierre d'alun", "🧂 Sel d'oseille", "🧴 Terre de Sommières",
+            "🧴 Blanc de Meudon", "🦷 Fil dentaire", "🧴 Bain de bouche", "🧻 Papier journal",
+            "🧽 Microfibre", "🧹 Brosse à dents", "🪥 Brosse douce", "🧽 Éponge abrasive",
+            "🧽 Tampon récurant", "🥤 Eau gazeuse", "🍺 Bière", "🍷 Vin blanc", "🥃 Vodka",
+            "🧴 Rhum", "🍶 Saké", "☕ Marc de café", "🍵 Sachet de thé usagé", "🧊 Neige carbonique",
+            "🌊 Eau de mer", "💧 Eau distillée", "💧 Eau déminéralisée", "🌧️ Eau de pluie",
+            "🫧 Mousse à raser", "🧴 Crème à raser", "🧴 After-shave", "🧴 Lait corporel",
+            "🧴 Crème hydratante", "🧴 Vaseline", "🧴 Glycérine", "🧂 Borax", "🧪 Percarbonate",
+            "🧴 Lessive liquide", "📦 Lessive en poudre", "🧴 Adoucissant", "🧴 Détachant",
+            "🧴 Eau de Javel", "🧪 Chlore", "🧴 Nettoyant multi-surfaces", "🧴 Nettoyant vitres",
+            "🧴 Nettoyant sols", "🧴 Dégraissant", "🧴 Décapant", "🧴 Polish métal",
+            "🧴 Produit WC", "🧴 Déboucheur", "🧴 Anti-calcaire", "🧴 Désinfectant",
+            "🌿 Savon d'Alep", "🌿 Huile essentielle citron", "🌿 Huile essentielle tea tree",
+            "🌿 Huile essentielle lavande", "🧂 Sel de l'Himalaya", "🧂 Fleur de sel",
+            "🍋 Zeste de citron", "🍊 Orange", "🍊 Pelure d'orange", "🥭 Mangue",
+            "🍌 Banane", "🍓 Fraise", "🫐 Myrtille", "🍇 Raisin", "🍑 Pêche",
+            "🧙 Larmes de licorne", "🦄 Corne de narval râpée", "🐉 Bave de dragon",
+            "🧚 Poussière de fée", "👻 Ectoplasme", "🧛 Sang de vampire", "🧟 Bave de zombie",
+            "🎃 Citrouille pourrie", "🕷️ Toile d'araignée", "🦇 Guano de chauve-souris",
+            "🐌 Bave d'escargot", "🐍 Venin de serpent", "🦎 Salive de lézard", "🐸 Mucus de grenouille",
+            "🦑 Encre de seiche", "🐙 Tentacule de pieuvre", "🦞 Carapace de homard écrasée",
+            "🦀 Pinces de crabe", "🐚 Coquillages broyés", "🪸 Corail en poudre",
+            "🌵 Sève de cactus", "🌺 Pétales de rose fanée", "🥀 Fleurs mortes",
+            "🍄 Champignon vénéneux", "🦠 Moisissure", "🧫 Bactéries", "🦟 Moustiques écrasés",
+            "🪰 Mouches mortes", "🐛 Ver de terre", "🪱 Asticots", "🐜 Fourmis",
+            "🕸️ Fils de soie d'araignée", "🦗 Grillons broyés", "🐝 Pollen d'abeille",
+            "🍯 Cire d'abeille", "🐻 Graisse d'ours", "🦌 Bois de cerf", "🐺 Poil de loup",
+            "🦊 Queue de renard", "🐰 Patte de lapin", "🐭 Whiskers de souris",
+            "🐹 Hamster shampoing", "🐨 Eucalyptus mâché", "🐼 Bambou fermenté",
+            "🦘 Poche de kangourou", "🦥 Poil de paresseux", "🦦 Loutre détergent",
+            "🦫 Barrage de castor", "🐿️ Noisettes écrasées", "🦔 Épines de hérisson",
+            "🦡 Terrier de blaireau", "🦨 Spray de mouffette", "🦝 Raton-laveur savon",
+            "🐾 Empreintes de pattes", "💩 Fumier de licorne", "🌙 Poussière de lune",
+            "⭐ Étoiles filantes", "☄️ Comète écrasée", "🌪️ Tornade en bouteille",
+            "🌋 Lave refroidie", "⚡ Éclair en poudre", "🌈 Arc-en-ciel liquide",
+            "❄️ Flocons de neige éternels", "🔥 Flammes congelées", "💨 Vent solidifié",
+            "🌊 Vague cristallisée", "🪐 Poussière d'astéroïde", "🌕 Fromage de lune",
+            "🧊 Glacier antarctique", "🏔️ Neige du Tibet", "🗻 Cendres volcaniques",
+            "🏝️ Sable de plage radioactive", "🏜️ Sable du Sahara", "🌴 Noix de coco fermentée",
+            "🥥 Lait de coco périmé", "🍍 Ananas moisi", "🥝 Kiwi pourri",
+            "🍉 Pastèque explosée", "🍈 Melon rance", "🫐 Baies toxiques",
+            "🍒 Cerises alcoolisées", "🍑 Pêches blettes", "🥭 Mangue avariée",
+            "🥑 Avocat noir", "🍆 Aubergine visqueuse", "🥦 Brocoli moisi",
+            "🥬 Salade pourrie", "🫑 Poivron fermenté", "🌶️ Piments brûlants",
+            "🫚 Gingembre piquant", "🧄 Ail vampire", "🧅 Oignon qui fait pleurer",
+            "🥕 Carotte mutante", "🌽 Maïs transgénique", "🫘 Haricots magiques",
+            "🥜 Cacahuètes allergiques", "🌰 Châtaignes explosives", "🫐 Noix vénéneuses",
+            "🍞 Pain moisi", "🥖 Baguette durcie", "🥨 Bretzel salé", "🥯 Bagel rassis",
+            "🥐 Croissant périmé", "🧇 Gaufre collante", "🥞 Crêpes brûlées",
+            "🧈 Beurre rance", "🧀 Fromage puant", "🥚 Œuf pourri", "🍳 Œuf au plat cramé",
+            "🥓 Bacon gras", "🍗 Poulet frit huileux", "🍖 Viande avariée",
+            "🦴 Os à moelle", "🍔 Hamburger périmé", "🌭 Hot-dog douteux",
+            "🍕 Pizza moisie", "🌮 Tacos suspects", "🌯 Burrito explosif",
+            "🫔 Tamales fermentés", "🥙 Kebab gras", "🥗 Salade César avariée",
+            "🍝 Spaghetti collants", "🍜 Ramen instantané", "🍲 Soupe de sorcière",
+            "🍱 Sushi périmé", "🍛 Curry piquant", "🍚 Riz gluant",
+            "🍙 Onigiri moisi", "🥟 Raviolis suspects", "🦪 Huître vivante",
+            "🍤 Crevette pourrie", "🍣 Sashimi douteux", "🍥 Cake au poisson",
+            "🍡 Boulettes gluantes", "🥠 Cookie de fortune périmé", "🥮 Gâteau de lune",
+            "🎂 Gâteau d'anniversaire rassis", "🍰 Part de gâteau moisie", "🧁 Cupcake explosif",
+            "🍮 Flan visqueux", "🍭 Sucette collante", "🍬 Bonbon poisseux",
+            "🍫 Chocolat fondu", "🍩 Donut gras", "🍪 Cookie brûlé",
+            "🌰 Crème de marron", "🥧 Tarte pourrie", "🍦 Glace fondue",
+            "🍧 Granité chimique", "🧃 Jus périmé", "🥤 Soda éventé",
+            "🧋 Bubble tea visqueux", "☕ Café bouillant", "🫖 Thé infusé 48h",
+            "🍵 Tisane de sorcière", "🥛 Lait caillé", "🍼 Biberon croupi",
+            "🫗 Eau croupie", "🧉 Maté amer", "🧊 Glaçons sales",
+            "🥃 Whisky de contrebande", "🍾 Champagne éventé", "🍷 Vin aigre",
+            "🍸 Cocktail toxique", "🍹 Punch radioactif", "🍺 Bière chaude",
+            "🍻 Liqueur douteuse", "🥂 Mousseux périmé", "🫙 Conserve rouillée"
+        ];
+
+        let selectedProduct = null;
+        let cleanProgress = 0;
+        let isMouseDown = false;
+        let victoryShown = false;
+
+        // Initialiser les produits
+        const productsList = document.getElementById('productsList');
+        products.forEach((product, index) => {
+            const div = document.createElement('div');
+            div.className = 'product-item';
+            div.textContent = product;
+            div.onclick = () => selectProduct(product, div);
+            productsList.appendChild(div);
+        });
+
+        function selectProduct(product, element) {
+            selectedProduct = product;
+            document.getElementById('selectedProduct').textContent = `Produit sélectionné: ${product}`;
+            
+            document.querySelectorAll('.product-item').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        const coinContainer = document.getElementById('coinContainer');
+        const coinDirty = document.getElementById('coinDirty');
+        const progressFill = document.getElementById('progressFill');
+
+        coinContainer.addEventListener('mousedown', (e) => {
+            if (selectedProduct) {
+                isMouseDown = true;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isMouseDown = false;
+        });
+
+        coinContainer.addEventListener('mousemove', (e) => {
+            if (isMouseDown && selectedProduct && cleanProgress < 100) {
+                createFoam(e);
+                cleanCoin();
+            }
+        });
+
+        coinContainer.addEventListener('touchstart', (e) => {
+            if (selectedProduct) {
+                isMouseDown = true;
+                e.preventDefault();
+            }
+        });
+
+        coinContainer.addEventListener('touchmove', (e) => {
+            if (isMouseDown && selectedProduct && cleanProgress < 100) {
+                const touch = e.touches[0];
+                const rect = coinContainer.getBoundingClientRect();
+                const fakeEvent = {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                };
+                createFoam(fakeEvent);
+                cleanCoin();
+                e.preventDefault();
+            }
+        });
+
+        coinContainer.addEventListener('touchend', () => {
+            isMouseDown = false;
+        });
+
+        function createFoam(e) {
+            const rect = coinContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const foam = document.createElement('div');
+            foam.className = 'foam';
+            foam.style.width = Math.random() * 30 + 30 + 'px';
+            foam.style.height = foam.style.width;
+            foam.style.left = (x - 20) + 'px';
+            foam.style.top = (y - 20) + 'px';
+            
+            coinContainer.appendChild(foam);
+
+            setTimeout(() => foam.remove(), 800);
+        }
+
+        function cleanCoin() {
+            cleanProgress += 0.015;
+            if (cleanProgress > 100) cleanProgress = 100;
+
+            const opacity = 1 - (cleanProgress / 100);
+            coinDirty.style.opacity = opacity;
+            
+            progressFill.style.width = cleanProgress + '%';
+            progressFill.textContent = Math.floor(cleanProgress) + '%';
+
+            if (cleanProgress >= 100 && !victoryShown) {
+                showVictory();
+            }
+        }
+
+        function showVictory() {
+            victoryShown = true;
+            const message = document.createElement('div');
+            message.className = 'victory-message';
+            message.innerHTML = '🎉<br>Pièce Parfaitement Nettoyée!<br>🎉';
+            document.body.appendChild(message);
+
+            setTimeout(() => message.remove(), 3000);
+        }
+
+        function resetGame() {
+            cleanProgress = 0;
+            victoryShown = false;
+            coinDirty.style.opacity = 1;
+            progressFill.style.width = '0%';
+            progressFill.textContent = '0%';
+            selectedProduct = null;
+            document.getElementById('selectedProduct').textContent = 'Choisissez un produit pour commencer';
+            document.querySelectorAll('.product-item').forEach(el => el.classList.remove('selected'));
+        }
+    </script>
+</body>
+</html>
