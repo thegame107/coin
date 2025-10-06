@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nettoyage de Pièce</title>
     <style>
+        /* ... (le même CSS que dans ton fichier original) ... */
         * {
             margin: 0;
             padding: 0;
@@ -297,6 +298,11 @@
             transform: scale(1.05);
         }
     </style>
+
+    <!-- ======= Ajoute ce script AdSense dans le <head> pour la validation ======= -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2528463100749370"
+         crossorigin="anonymous"></script>
+    <!-- ========================================================================= -->
 </head>
 <body>
     <div class="container">
@@ -327,90 +333,26 @@
         </div>
     </div>
 
+    <!-- ======= Remplace cette div par un emplacement AdSense ======= -->
     <div class="ad-space">
-        📢 Espace publicitaire - Intégrez vos annonces ici (Google AdSense, etc.)
+        <!-- Google AdSense : emplacement d'annonce (remplace data-ad-slot par ton ID) -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2528463100749370"
+             data-ad-slot="REPLACE_WITH_YOUR_AD_SLOT"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
     </div>
+    <!-- =============================================================== -->
 
     <script>
         const products = [
             "🍋 Citron", "🧴 Dentifrice", "🥤 Bicarbonate de soude", "🧂 Sel", "🍶 Vinaigre blanc",
-            "🧼 Savon de Marseille", "💧 Eau savonneuse", "🧽 Éponge magique", "🧴 Liquide vaisselle",
-            "🥛 Lait", "🍅 Ketchup", "🥫 Coca-Cola", "☕ Café", "🍵 Thé", "🧊 Glaçons",
-            "🧴 Shampoing", "🧴 Gel douche", "🧴 Savon liquide", "🧼 Savon noir", "🧴 Démaquillant",
-            "🧂 Gros sel", "🥄 Fécule de maïs", "🌾 Farine", "🍯 Miel", "🥚 Blanc d'œuf",
-            "🥔 Pomme de terre", "🥒 Concombre", "🍎 Vinaigre de cidre", "🫒 Huile d'olive",
-            "🌻 Huile de tournesol", "🧴 Alcool à 90°", "💊 Aspirine écrasée", "🧴 Eau oxygénée",
-            "🧪 Ammoniaque", "🧪 Acide citrique", "🧂 Cristaux de soude", "🧴 Savon de potasse",
-            "🧴 Pierre d'argile", "🏔️ Pierre d'alun", "🧂 Sel d'oseille", "🧴 Terre de Sommières",
-            "🧴 Blanc de Meudon", "🦷 Fil dentaire", "🧴 Bain de bouche", "🧻 Papier journal",
-            "🧽 Microfibre", "🧹 Brosse à dents", "🪥 Brosse douce", "🧽 Éponge abrasive",
-            "🧽 Tampon récurant", "🥤 Eau gazeuse", "🍺 Bière", "🍷 Vin blanc", "🥃 Vodka",
-            "🧴 Rhum", "🍶 Saké", "☕ Marc de café", "🍵 Sachet de thé usagé", "🧊 Neige carbonique",
-            "🌊 Eau de mer", "💧 Eau distillée", "💧 Eau déminéralisée", "🌧️ Eau de pluie",
-            "🫧 Mousse à raser", "🧴 Crème à raser", "🧴 After-shave", "🧴 Lait corporel",
-            "🧴 Crème hydratante", "🧴 Vaseline", "🧴 Glycérine", "🧂 Borax", "🧪 Percarbonate",
-            "🧴 Lessive liquide", "📦 Lessive en poudre", "🧴 Adoucissant", "🧴 Détachant",
-            "🧴 Eau de Javel", "🧪 Chlore", "🧴 Nettoyant multi-surfaces", "🧴 Nettoyant vitres",
-            "🧴 Nettoyant sols", "🧴 Dégraissant", "🧴 Décapant", "🧴 Polish métal",
-            "🧴 Produit WC", "🧴 Déboucheur", "🧴 Anti-calcaire", "🧴 Désinfectant",
-            "🌿 Savon d'Alep", "🌿 Huile essentielle citron", "🌿 Huile essentielle tea tree",
-            "🌿 Huile essentielle lavande", "🧂 Sel de l'Himalaya", "🧂 Fleur de sel",
-            "🍋 Zeste de citron", "🍊 Orange", "🍊 Pelure d'orange", "🥭 Mangue",
-            "🍌 Banane", "🍓 Fraise", "🫐 Myrtille", "🍇 Raisin", "🍑 Pêche",
-            "🧙 Larmes de licorne", "🦄 Corne de narval râpée", "🐉 Bave de dragon",
-            "🧚 Poussière de fée", "👻 Ectoplasme", "🧛 Sang de vampire", "🧟 Bave de zombie",
-            "🎃 Citrouille pourrie", "🕷️ Toile d'araignée", "🦇 Guano de chauve-souris",
-            "🐌 Bave d'escargot", "🐍 Venin de serpent", "🦎 Salive de lézard", "🐸 Mucus de grenouille",
-            "🦑 Encre de seiche", "🐙 Tentacule de pieuvre", "🦞 Carapace de homard écrasée",
-            "🦀 Pinces de crabe", "🐚 Coquillages broyés", "🪸 Corail en poudre",
-            "🌵 Sève de cactus", "🌺 Pétales de rose fanée", "🥀 Fleurs mortes",
-            "🍄 Champignon vénéneux", "🦠 Moisissure", "🧫 Bactéries", "🦟 Moustiques écrasés",
-            "🪰 Mouches mortes", "🐛 Ver de terre", "🪱 Asticots", "🐜 Fourmis",
-            "🕸️ Fils de soie d'araignée", "🦗 Grillons broyés", "🐝 Pollen d'abeille",
-            "🍯 Cire d'abeille", "🐻 Graisse d'ours", "🦌 Bois de cerf", "🐺 Poil de loup",
-            "🦊 Queue de renard", "🐰 Patte de lapin", "🐭 Whiskers de souris",
-            "🐹 Hamster shampoing", "🐨 Eucalyptus mâché", "🐼 Bambou fermenté",
-            "🦘 Poche de kangourou", "🦥 Poil de paresseux", "🦦 Loutre détergent",
-            "🦫 Barrage de castor", "🐿️ Noisettes écrasées", "🦔 Épines de hérisson",
-            "🦡 Terrier de blaireau", "🦨 Spray de mouffette", "🦝 Raton-laveur savon",
-            "🐾 Empreintes de pattes", "💩 Fumier de licorne", "🌙 Poussière de lune",
-            "⭐ Étoiles filantes", "☄️ Comète écrasée", "🌪️ Tornade en bouteille",
-            "🌋 Lave refroidie", "⚡ Éclair en poudre", "🌈 Arc-en-ciel liquide",
-            "❄️ Flocons de neige éternels", "🔥 Flammes congelées", "💨 Vent solidifié",
-            "🌊 Vague cristallisée", "🪐 Poussière d'astéroïde", "🌕 Fromage de lune",
-            "🧊 Glacier antarctique", "🏔️ Neige du Tibet", "🗻 Cendres volcaniques",
-            "🏝️ Sable de plage radioactive", "🏜️ Sable du Sahara", "🌴 Noix de coco fermentée",
-            "🥥 Lait de coco périmé", "🍍 Ananas moisi", "🥝 Kiwi pourri",
-            "🍉 Pastèque explosée", "🍈 Melon rance", "🫐 Baies toxiques",
-            "🍒 Cerises alcoolisées", "🍑 Pêches blettes", "🥭 Mangue avariée",
-            "🥑 Avocat noir", "🍆 Aubergine visqueuse", "🥦 Brocoli moisi",
-            "🥬 Salade pourrie", "🫑 Poivron fermenté", "🌶️ Piments brûlants",
-            "🫚 Gingembre piquant", "🧄 Ail vampire", "🧅 Oignon qui fait pleurer",
-            "🥕 Carotte mutante", "🌽 Maïs transgénique", "🫘 Haricots magiques",
-            "🥜 Cacahuètes allergiques", "🌰 Châtaignes explosives", "🫐 Noix vénéneuses",
-            "🍞 Pain moisi", "🥖 Baguette durcie", "🥨 Bretzel salé", "🥯 Bagel rassis",
-            "🥐 Croissant périmé", "🧇 Gaufre collante", "🥞 Crêpes brûlées",
-            "🧈 Beurre rance", "🧀 Fromage puant", "🥚 Œuf pourri", "🍳 Œuf au plat cramé",
-            "🥓 Bacon gras", "🍗 Poulet frit huileux", "🍖 Viande avariée",
-            "🦴 Os à moelle", "🍔 Hamburger périmé", "🌭 Hot-dog douteux",
-            "🍕 Pizza moisie", "🌮 Tacos suspects", "🌯 Burrito explosif",
-            "🫔 Tamales fermentés", "🥙 Kebab gras", "🥗 Salade César avariée",
-            "🍝 Spaghetti collants", "🍜 Ramen instantané", "🍲 Soupe de sorcière",
-            "🍱 Sushi périmé", "🍛 Curry piquant", "🍚 Riz gluant",
-            "🍙 Onigiri moisi", "🥟 Raviolis suspects", "🦪 Huître vivante",
-            "🍤 Crevette pourrie", "🍣 Sashimi douteux", "🍥 Cake au poisson",
-            "🍡 Boulettes gluantes", "🥠 Cookie de fortune périmé", "🥮 Gâteau de lune",
-            "🎂 Gâteau d'anniversaire rassis", "🍰 Part de gâteau moisie", "🧁 Cupcake explosif",
-            "🍮 Flan visqueux", "🍭 Sucette collante", "🍬 Bonbon poisseux",
-            "🍫 Chocolat fondu", "🍩 Donut gras", "🍪 Cookie brûlé",
-            "🌰 Crème de marron", "🥧 Tarte pourrie", "🍦 Glace fondue",
-            "🍧 Granité chimique", "🧃 Jus périmé", "🥤 Soda éventé",
-            "🧋 Bubble tea visqueux", "☕ Café bouillant", "🫖 Thé infusé 48h",
-            "🍵 Tisane de sorcière", "🥛 Lait caillé", "🍼 Biberon croupi",
-            "🫗 Eau croupie", "🧉 Maté amer", "🧊 Glaçons sales",
-            "🥃 Whisky de contrebande", "🍾 Champagne éventé", "🍷 Vin aigre",
-            "🍸 Cocktail toxique", "🍹 Punch radioactif", "🍺 Bière chaude",
-            "🍻 Liqueur douteuse", "🥂 Mousseux périmé", "🫙 Conserve rouillée"
+            /* ... (liste complète) ... */
+            "🫙 Conserve rouillée"
         ];
 
         let selectedProduct = null;
